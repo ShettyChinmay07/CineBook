@@ -1,11 +1,24 @@
 
 # CineBook - Movie Ticket Booking System
 
-## Project Overview
+CineBook is a web-based movie ticket booking application developed using Python and Django.
 
-CineBook is a web-based movie ticket booking system developed using Python and Django.
+## Features
 
-It allows users to browse movies, view available shows, select seats, book movie tickets, cancel bookings and access digital tickets.
+- User registration and login
+- Movie browsing and search
+- Movie details and show listings
+- Theatre management
+- Interactive seat selection
+- Prevention of double booking
+- Ticket booking and confirmation
+- Booking cancellation
+- Automatic seat release
+- My Bookings and booking history
+- Digital tickets
+- QR code generation
+- Printable movie tickets
+- Django Admin Panel
 
 ## Technologies Used
 
@@ -14,99 +27,45 @@ It allows users to browse movies, view available shows, select seats, book movie
 - HTML
 - CSS
 - JavaScript
-- SQLite Database
+- SQLite
+- PostgreSQL
 - Pillow
 - QR Code
 
-## Main Features
-
-1. User Registration and Login
-2. Movie Listing and Search
-3. Movie Details and Show Information
-4. Theatre and Show Management
-5. Interactive Seat Selection
-6. Prevention of Double Seat Booking
-7. Online Ticket Booking
-8. Booking Confirmation
-9. My Bookings
-10. Booking Cancellation
-11. Automatic Seat Release
-12. Booking History
-13. Digital Ticket Generation
-14. QR Code Generation
-15. Printable Movie Tickets
-16. Django Admin Management
-
 ## Installation
 
-### 1. Create a Virtual Environment
+1. Create a virtual environment:
 
-```bash
-python -m venv venv
-```
+   `python -m venv venv`
 
-### 2. Activate Virtual Environment
+2. Activate it:
 
-Windows PowerShell:
+   `.\venv\Scripts\Activate`
 
-```powershell
-.\venv\Scripts\Activate
-```
+3. Install dependencies:
 
-### 3. Install Dependencies
+   `pip install -r requirements.txt`
 
-```bash
-pip install -r requirements.txt
-```
+4. Apply migrations:
 
-### 4. Apply Database Migrations
+   `python manage.py migrate`
 
-```bash
-python manage.py migrate
-```
+5. Start the server:
 
-### 5. Run the Development Server
+   `python manage.py runserver`
 
-```bash
-python manage.py runserver
-```
-
-### 6. Open the Website
-
-```text
-http://127.0.0.1:8000/
-```
-
-## Admin Panel
-
-Open:
-
-```text
-http://127.0.0.1:8000/admin/
-```
-
-## Database
-
-CineBook uses SQLite for storing:
-
-- Movies
-- Theatres
-- Shows
-- User information
-- Bookings
-- Booked seats
+6. Open `http://127.0.0.1:8000/`
 
 ## Project Structure
 
-- booking/ - Django application
-- cinebook/ - Django project configuration
-- templates/ - HTML templates
+- booking/ - Main Django application
+- cinebook/ - Django configuration
+- templates/ - HTML pages
 - static/ - CSS and static files
-- media/ - Movie poster images
-- db.sqlite3 - SQLite database
-- manage.py - Django management file
-- requirements.txt - Project dependencies
+- media/ - Movie posters
+- requirements.txt - Dependencies
+- build.sh - Deployment build script
 
-## Conclusion
+## Author
 
-CineBook provides a convenient platform for movie ticket booking with seat management, booking cancellation, digital tickets and QR code generation.
+Chinmay Shetty
