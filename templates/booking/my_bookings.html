@@ -1,0 +1,410 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings | CineBook</title>
+
+    <link rel="stylesheet" href="{% static 'booking/style.css' %}">
+
+    <style>
+        body {
+            margin: 0;
+            background: #0c0b13;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            height: 75px;
+            padding: 0 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #15141e;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .logo span {
+            color: #e50914;
+        }
+
+        .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-auth form {
+            margin: 0;
+        }
+
+        .login-btn {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .bookings-container {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 20px;
+        }
+
+        .bookings-heading {
+            margin-bottom: 35px;
+        }
+
+        .bookings-heading h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .bookings-heading p {
+            color: #aaa;
+        }
+
+        .booking-card {
+            background: #191824;
+            border: 1px solid #302d3c;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 22px;
+        }
+
+        .booking-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .booking-top h2 {
+            font-size: 23px;
+            margin-bottom: 7px;
+        }
+
+        .booking-reference {
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .booking-status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            height: fit-content;
+            font-size: 13px;
+        }
+
+        .confirmed {
+            color: #54d68b;
+            background: #153528;
+        }
+
+        .cancelled {
+            color: #ff7777;
+            background: #421c24;
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            border-top: 1px solid #302d3c;
+            padding-top: 20px;
+        }
+
+        .detail-label {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .booking-seats {
+            margin-top: 20px;
+            color: #ddd;
+            line-height: 1.6;
+        }
+
+        .released-label {
+            color: #ff7777;
+            font-size: 13px;
+            margin-left: 5px;
+        }
+
+        .booking-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .ticket-btn {
+            display: inline-block;
+            background: #302d3c;
+            color: white;
+            border: 1px solid #555064;
+            padding: 11px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .ticket-btn:hover {
+            background: #444052;
+        }
+
+        .cancel-btn {
+            background: #b91c2b;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .cancel-btn:hover {
+            background: #e50914;
+        }
+
+        .empty-bookings {
+            text-align: center;
+            padding: 65px 20px;
+            background: #191824;
+            border-radius: 14px;
+        }
+
+        .empty-bookings h2 {
+            margin-bottom: 12px;
+        }
+
+        .empty-bookings p {
+            color: #aaa;
+            margin-bottom: 25px;
+        }
+
+        .browse-btn {
+            display: inline-block;
+            background: #e50914;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 650px) {
+            .booking-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .bookings-heading h1 {
+                font-size: 28px;
+            }
+
+            .navbar {
+                padding: 0 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">CINE<span>BOOK</span></div>
+
+        <div class="nav-auth">
+            <a href="{% url 'home' %}" class="login-btn">Home</a>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="login-btn">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <main class="bookings-container">
+
+        <div class="bookings-heading">
+            <h1>My Bookings 🎟️</h1>
+            <p>All your movie tickets in one place.</p>
+        </div>
+
+        {% if bookings %}
+
+            {% for booking in bookings %}
+
+                <div class="booking-card">
+
+                    <div class="booking-top">
+
+                        <div>
+                            <h2>{{ booking.show.movie.title }}</h2>
+
+                            <p class="booking-reference">
+                                Booking ID: {{ booking.booking_reference }}
+                            </p>
+                        </div>
+
+                        {% if booking.status == 'Confirmed' %}
+                            <span class="booking-status confirmed">
+                                Confirmed
+                            </span>
+                        {% else %}
+                            <span class="booking-status cancelled">
+                                Cancelled
+                            </span>
+                        {% endif %}
+
+                    </div>
+
+                    <div class="booking-details">
+
+                        <div>
+                            <p class="detail-label">Theatre</p>
+                            <p class="detail-value">
+                                {{ booking.show.theatre.name }}
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="detail-label">Show Date</p>
+                            <p class="detail-value">
+                                {{ booking.show.show_date|date:"d M Y" }}
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="detail-label">Show Time</p>
+                            <p class="detail-value">
+                                {{ booking.show.show_time|time:"h:i A" }}
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="detail-label">Total Amount</p>
+                            <p class="detail-value">
+                                ₹{{ booking.total_amount }}
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="detail-label">Booked On</p>
+                            <p class="detail-value">
+                                {{ booking.created_at|date:"d M Y" }}
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="detail-label">Language</p>
+                            <p class="detail-value">
+                                {{ booking.show.movie.language }}
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- ORIGINAL SEAT DETAILS -->
+
+                    <div class="booking-seats">
+
+                        <strong>Seats:</strong>
+
+                        {% if booking.seat_numbers %}
+
+                            {{ booking.seat_numbers }}
+
+                            {% if booking.status == 'Cancelled' %}
+                                <span class="released-label">
+                                    (Seats released)
+                                </span>
+                            {% endif %}
+
+                        {% elif booking.status == 'Confirmed' %}
+
+                            {% for seat in booking.booked_seats.all %}
+                                {{ seat.seat_number }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                No seat details available
+                            {% endfor %}
+
+                        {% else %}
+
+                            Historical seat details unavailable
+
+                        {% endif %}
+
+                    </div>
+
+                    <!-- BOOKING ACTIONS -->
+
+                    {% if booking.status == 'Confirmed' %}
+
+                        <div class="booking-actions">
+
+                            <a
+                                href="{% url 'view_ticket' booking.id %}"
+                                class="ticket-btn"
+                            >
+                                View / Print Ticket
+                            </a>
+
+                            <form
+                                method="POST"
+                                action="{% url 'cancel_booking' booking.id %}"
+                                onsubmit="return confirm('Are you sure you want to cancel this booking?');"
+                            >
+                                {% csrf_token %}
+
+                                <button type="submit" class="cancel-btn">
+                                    Cancel Booking
+                                </button>
+                            </form>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-bookings">
+                <h2>No bookings yet!</h2>
+                <p>You haven't booked any movie tickets yet.</p>
+
+                <a href="{% url 'home' %}" class="browse-btn">
+                    Browse Movies
+                </a>
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</body>
+</html>

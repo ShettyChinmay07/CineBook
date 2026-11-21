@@ -1,0 +1,669 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Booking Confirmed | CineBook</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #0c0b13;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #15141e;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .logo span,
+        footer span {
+            color: #e50914;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .confirmation-section {
+            padding: 45px 20px;
+        }
+
+        .confirmation-card {
+            max-width: 750px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 65px;
+            height: 65px;
+            margin: auto;
+            border-radius: 50%;
+            background: #153528;
+            color: #54d68b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            font-weight: bold;
+        }
+
+        .tagline {
+            color: #e50914;
+            font-size: 13px;
+            letter-spacing: 3px;
+            margin-top: 25px;
+            font-weight: bold;
+        }
+
+        .confirmation-card h1 {
+            font-size: 36px;
+            margin: 12px 0;
+        }
+
+        .confirmation-message {
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* DIGITAL TICKET */
+
+        .digital-ticket {
+            background: #191824;
+            border: 1px solid #393548;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: left;
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ticket-label {
+            color: #999;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+
+        .ticket-header h2 {
+            font-size: 27px;
+            margin: 8px 0;
+        }
+
+        .ticket-status {
+            background: #153528;
+            color: #54d68b;
+            padding: 9px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .ticket-divider {
+            border-top: 1px dashed #514d61;
+            margin: 22px 0;
+        }
+
+        /* TICKET DETAILS */
+
+        .ticket-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .ticket-info-grid div span,
+        .ticket-reference span {
+            display: block;
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .ticket-info-grid div strong {
+            font-size: 15px;
+            overflow-wrap: anywhere;
+        }
+
+        /* SEATS */
+
+        .ticket-seat-section h3 {
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .confirmed-seats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .confirmed-seats span {
+            background: #30202a;
+            border: 1px solid #e50914;
+            color: white;
+            padding: 9px 16px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        /* TOTAL */
+
+        .ticket-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ticket-total span {
+            color: #aaa;
+        }
+
+        .ticket-total strong {
+            font-size: 25px;
+            color: #54d68b;
+        }
+
+        /* BOOKING REFERENCE */
+
+        .ticket-reference {
+            background: #111019;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
+        .ticket-reference strong {
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        /* QR CODE */
+
+        .ticket-qr-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .ticket-qr-section h3 {
+            font-size: 17px;
+            margin-bottom: 7px;
+        }
+
+        .ticket-qr-section p {
+            color: #aaa;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .qr-container {
+            display: inline-block;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .qr-container img {
+            display: block;
+            width: 150px;
+            height: 150px;
+        }
+
+        .qr-note {
+            color: #999;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        /* BUTTONS */
+
+        .confirmation-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .book-btn,
+        .print-btn {
+            display: inline-block;
+            padding: 13px 23px;
+            border: none;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .book-btn {
+            background: #e50914;
+            color: white;
+        }
+
+        .print-btn {
+            background: #302d3c;
+            color: white;
+            border: 1px solid #555064;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding: 30px 15px;
+            background: #15141e;
+            color: #aaa;
+            margin-top: 30px;
+        }
+
+        footer h2 {
+            color: white;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+            .confirmation-card h1 {
+                font-size: 28px;
+            }
+
+            .digital-ticket {
+                padding: 20px;
+            }
+
+            .ticket-header h2 {
+                font-size: 21px;
+            }
+
+            .ticket-info-grid {
+                gap: 18px 12px;
+            }
+
+            .ticket-info-grid div strong {
+                font-size: 13px;
+            }
+
+            .nav-links {
+                gap: 12px;
+                font-size: 13px;
+            }
+        }
+
+        /* SINGLE-PAGE PRINT LAYOUT */
+
+        @media print {
+
+            @page {
+                size: A4 portrait;
+                margin: 8mm;
+            }
+
+            html,
+            body {
+                background: white !important;
+                color: black !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .navbar,
+            footer,
+            .success-icon,
+            .tagline,
+            .confirmation-message,
+            .confirmation-actions {
+                display: none !important;
+            }
+
+            .confirmation-section {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .confirmation-card {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 auto !important;
+            }
+
+            .confirmation-card h1 {
+                color: black !important;
+                font-size: 20px !important;
+                margin: 0 0 12px !important;
+            }
+
+            .digital-ticket {
+                background: white !important;
+                color: black !important;
+                border: 1.5px solid #333 !important;
+                border-radius: 8px !important;
+                padding: 16px !important;
+                margin: 0 !important;
+
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+
+                box-shadow: none !important;
+            }
+
+            .ticket-header h2,
+            .ticket-info-grid div strong,
+            .ticket-seat-section h3,
+            .ticket-total strong,
+            .ticket-reference strong,
+            .ticket-qr-section h3 {
+                color: black !important;
+            }
+
+            .ticket-label,
+            .ticket-info-grid div span,
+            .ticket-reference span,
+            .ticket-total span,
+            .ticket-qr-section p {
+                color: #555 !important;
+            }
+
+            .ticket-header h2 {
+                font-size: 21px !important;
+                margin: 5px 0 !important;
+            }
+
+            .ticket-status {
+                color: #087b40 !important;
+                background: #e4f5eb !important;
+                padding: 6px 10px !important;
+            }
+
+            .ticket-divider {
+                border-color: #888 !important;
+                margin: 12px 0 !important;
+            }
+
+            .ticket-info-grid {
+                gap: 12px 18px !important;
+            }
+
+            .ticket-info-grid div span,
+            .ticket-reference span {
+                font-size: 10px !important;
+                margin-bottom: 4px !important;
+            }
+
+            .ticket-info-grid div strong {
+                font-size: 12px !important;
+            }
+
+            .ticket-seat-section h3,
+            .ticket-qr-section h3 {
+                font-size: 14px !important;
+                margin: 0 0 8px !important;
+            }
+
+            .confirmed-seats {
+                gap: 7px !important;
+            }
+
+            .confirmed-seats span {
+                color: black !important;
+                background: white !important;
+                border: 1px solid #333 !important;
+                padding: 6px 11px !important;
+                font-size: 12px !important;
+            }
+
+            .ticket-total strong {
+                font-size: 19px !important;
+            }
+
+            .ticket-reference {
+                background: #f3f3f3 !important;
+                padding: 10px !important;
+            }
+
+            .ticket-reference strong {
+                font-size: 11px !important;
+            }
+
+            .ticket-qr-section {
+                margin-top: 10px !important;
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+
+            .ticket-qr-section p {
+                font-size: 10px !important;
+                margin: 5px 0 8px !important;
+            }
+
+            .qr-container {
+                background: white !important;
+                padding: 5px !important;
+                border: 1px solid #ddd !important;
+            }
+
+            .qr-container img {
+                width: 105px !important;
+                height: 105px !important;
+            }
+
+            .qr-note {
+                font-size: 9px !important;
+                margin-top: 5px !important;
+            }
+
+            .digital-ticket,
+            .ticket-qr-section,
+            .ticket-reference,
+            .ticket-total,
+            .ticket-seat-section {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">CINE<span>BOOK</span></div>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/#movies">Movies</a>
+        </div>
+    </nav>
+
+    <section class="confirmation-section">
+
+        <div class="confirmation-card">
+
+            <div class="success-icon">✓</div>
+
+            <p class="tagline">CINEBOOK DIGITAL TICKET</p>
+
+            <h1>Booking Confirmed!</h1>
+
+            <p class="confirmation-message">
+                Your movie tickets have been successfully booked.
+                Get ready for an amazing cinema experience!
+            </p>
+
+            <div class="digital-ticket">
+
+                <div class="ticket-header">
+
+                    <div>
+                        <p class="ticket-label">YOUR MOVIE</p>
+
+                        <h2>{{ booking.show.movie.title }}</h2>
+                    </div>
+
+                    <span class="ticket-status">CONFIRMED</span>
+
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <div class="ticket-info-grid">
+
+                    <div>
+                        <span>Theatre</span>
+                        <strong>{{ booking.show.theatre.name }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Location</span>
+                        <strong>{{ booking.show.theatre.city }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Date</span>
+                        <strong>{{ booking.show.show_date|date:"d M Y" }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Show Time</span>
+                        <strong>{{ booking.show.show_time|time:"h:i A" }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Customer</span>
+                        <strong>{{ booking.customer_name }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Email</span>
+                        <strong>{{ booking.customer_email }}</strong>
+                    </div>
+
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <div class="ticket-seat-section">
+
+                    <h3>Your Selected Seats</h3>
+
+                    <div class="confirmed-seats">
+
+                        {% for seat in booking.booked_seats.all %}
+                            <span>{{ seat.seat_number }}</span>
+                        {% empty %}
+                            {% if booking.seat_numbers %}
+                                <span>{{ booking.seat_numbers }}</span>
+                            {% else %}
+                                <span>No seat details available</span>
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <div class="ticket-total">
+                    <span>Total Amount</span>
+                    <strong>₹{{ booking.total_amount }}</strong>
+                </div>
+
+                <div class="ticket-divider"></div>
+
+                <div class="ticket-reference">
+
+                    <span>BOOKING REFERENCE</span>
+
+                    <strong>{{ booking.booking_reference }}</strong>
+
+                </div>
+
+                {% if qr_code %}
+
+                    <div class="ticket-qr-section">
+
+                        <div class="ticket-divider"></div>
+
+                        <h3>Scan Your Ticket QR Code</h3>
+
+                        <p>Scan this code to open your digital ticket.</p>
+
+                        <div class="qr-container">
+                            <img
+                                src="data:image/png;base64,{{ qr_code }}"
+                                alt="CineBook Ticket QR Code"
+                            >
+                        </div>
+
+                        <p class="qr-note">
+                            Keep this ticket available for reference.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="confirmation-actions">
+
+                <button
+                    type="button"
+                    class="print-btn"
+                    onclick="window.print()"
+                >
+                    Print Ticket
+                </button>
+
+                <a href="/" class="book-btn">
+                    Back to Home →
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer>
+        <h2>CINE<span>BOOK</span></h2>
+        <p>Your movie. Your seat. Your experience.</p>
+        <p>© 2026 CineBook. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

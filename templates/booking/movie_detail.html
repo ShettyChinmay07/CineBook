@@ -1,0 +1,186 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ movie.title }} | CineBook</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">Cine<span>Book</span></div>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/#movies">Movies</a>
+            <a href="/#about">About</a>
+        </div>
+    </nav>
+
+
+    <!-- Movie Details -->
+    <section class="detail-section premium-detail">
+
+        <div class="detail-poster">
+
+            {% if movie.poster %}
+
+                <img src="{{ movie.poster.url }}"
+                     alt="{{ movie.title }}">
+
+            {% else %}
+
+                <div class="poster">
+                    {{ movie.title|slice:":1" }}
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="detail-info">
+
+            <p class="tagline">NOW SHOWING ON CINEBOOK</p>
+
+            <h1>{{ movie.title }}</h1>
+
+            <div class="detail-meta">
+                <span>{{ movie.genre }}</span>
+                <span>{{ movie.language }}</span>
+                <span>{{ movie.duration }} Minutes</span>
+            </div>
+
+            <div class="detail-description">
+
+                <h3>About the Movie</h3>
+
+                <p>{{ movie.description }}</p>
+
+            </div>
+
+            <a href="#available-shows" class="book-btn">
+                Book Your Tickets →
+            </a>
+
+            <a href="/" class="back-link">
+                ← Back to Movies
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- Theatre and Showtime Section -->
+    <section class="shows-section" id="available-shows">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="tagline">CHOOSE YOUR EXPERIENCE</p>
+                <h2>Available Theatres & Showtimes</h2>
+            </div>
+
+        </div>
+
+
+        <div class="premium-show-grid">
+
+            {% for show in shows %}
+
+            <div class="premium-show-card">
+
+                <div class="show-card-top">
+
+                    <div>
+                        <p class="show-label">CINEMA</p>
+                        <h3>{{ show.theatre.name }}</h3>
+                        <p class="show-location">
+                            {{ show.theatre.location }},
+                            {{ show.theatre.city }}
+                        </p>
+                    </div>
+
+                    <div class="show-icon">▶</div>
+
+                </div>
+
+
+                <div class="show-divider"></div>
+
+
+                <div class="show-information">
+
+                    <div>
+                        <span>Date</span>
+                        <strong>{{ show.show_date|date:"d M Y" }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Show Time</span>
+                        <strong>{{ show.show_time|time:"h:i A" }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Ticket Price</span>
+                        <strong>₹{{ show.ticket_price }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Available Seats</span>
+                        <strong>{{ show.available_seats }}</strong>
+                    </div>
+
+                </div>
+
+
+                {% if show.available_seats > 0 %}
+
+                    <a href="{% url 'seat_selection' show.id %}"
+                       class="book-btn show-book-btn">
+                        Select Seats →
+                    </a>
+
+                {% else %}
+
+                    <p class="sold-out">Sold Out</p>
+
+                {% endif %}
+
+            </div>
+
+            {% empty %}
+
+            <div class="no-shows">
+                <h3>No shows available currently.</h3>
+                <p>Please check back later for new showtimes.</p>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <h2>Cine<span>Book</span></h2>
+
+        <p>Your movie. Your seat. Your experience.</p>
+
+        <p>© 2026 CineBook. All rights reserved.</p>
+
+    </footer>
+
+</body>
+</html>

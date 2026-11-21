@@ -1,0 +1,78 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | CineBook</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">Cine<span>Book</span></div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/#movies">Movies</a>
+    </div>
+</nav>
+
+<section class="auth-section">
+
+    <div class="auth-card">
+
+        <p class="tagline">JOIN CINEBOOK</p>
+
+        <h1>Create Account</h1>
+
+        <p class="auth-description">
+            Create your account and enjoy a better movie booking experience.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="auth-error">
+                    Please correct the errors below.
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+
+            <label>Username</label>
+            {{ form.username }}
+
+            <label>Password</label>
+            {{ form.password1 }}
+
+            <label>Confirm Password</label>
+            {{ form.password2 }}
+
+            <button type="submit" class="book-btn auth-button">
+                Create Account →
+            </button>
+
+        </form>
+
+        <p class="auth-switch">
+            Already have an account?
+            <a href="{% url 'login' %}">Login</a>
+        </p>
+
+    </div>
+
+</section>
+
+<footer>
+    <h2>Cine<span>Book</span></h2>
+    <p>Your movie. Your seat. Your experience.</p>
+    <p>© 2026 CineBook. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

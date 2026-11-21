@@ -1,0 +1,73 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %}
+{{ title }} | CineBook Administration
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        CINE<span style="color: #e50914;">BOOK</span> ADMIN
+    </a>
+</h1>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+
+<style>
+    :root {
+        --primary: #e50914;
+        --secondary: #15141e;
+        --accent: #e50914;
+        --header-bg: #15141e;
+        --header-color: white;
+        --breadcrumbs-bg: #242231;
+        --link-fg: #c40010;
+        --link-hover-color: #e50914;
+        --button-bg: #e50914;
+        --button-hover-bg: #b90710;
+        --default-button-bg: #e50914;
+        --default-button-hover-bg: #b90710;
+    }
+
+    #header {
+        background: #15141e;
+        color: white;
+    }
+
+    #branding h1 a {
+        color: white;
+        font-weight: bold;
+        font-size: 23px;
+    }
+
+    div.breadcrumbs {
+        background: #242231;
+    }
+
+    .module h2,
+    .module caption,
+    .inline-group h2 {
+        background: #e50914;
+    }
+
+    .button,
+    input[type="submit"],
+    input[type="button"],
+    .submit-row input {
+        background: #e50914;
+        border-radius: 6px;
+    }
+
+    .button:hover,
+    input[type="submit"]:hover {
+        background: #b90710;
+    }
+
+    #content {
+        padding: 25px;
+    }
+</style>
+{% endblock %}

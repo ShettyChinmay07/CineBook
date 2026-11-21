@@ -1,0 +1,314 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Select Seats | CineBook</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">Cine<span>Book</span></div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/#movies">Movies</a>
+    </div>
+</nav>
+
+
+<section class="seat-section premium-seat-section">
+
+    <p class="tagline">YOUR CINEMA EXPERIENCE</p>
+
+    <h1>Select Your Seats</h1>
+
+    <div class="seat-movie-info">
+
+        <h2>{{ show.movie.title }}</h2>
+
+        <p>{{ show.theatre.name }}</p>
+
+        <p>
+            {{ show.show_date|date:"d M Y" }}
+            • {{ show.show_time|time:"h:i A" }}
+        </p>
+
+        <p class="seat-price">
+            ₹{{ show.ticket_price }} per seat
+        </p>
+
+    </div>
+
+
+    {% if error %}
+        <div class="seat-error">
+            {{ error }}
+        </div>
+    {% endif %}
+
+
+    <form method="POST"
+          action="{% url 'create_booking' show.id %}"
+          id="bookingForm">
+
+        {% csrf_token %}
+
+        <!-- Cinema Screen -->
+
+        <div class="cinema-screen-container">
+
+            <div class="cinema-screen"></div>
+
+            <p>SCREEN THIS WAY</p>
+
+        </div>
+
+
+        <!-- Seat Layout -->
+
+        <div class="seat-layout" id="seatLayout"></div>
+
+
+        <!-- Seat Legend -->
+
+        <div class="seat-legend">
+
+            <div>
+                <span class="legend-seat available-legend"></span>
+                Available
+            </div>
+
+            <div>
+                <span class="legend-seat selected-legend"></span>
+                Selected
+            </div>
+
+            <div>
+                <span class="legend-seat unavailable-legend"></span>
+                Booked
+            </div>
+
+        </div>
+
+
+        <!-- Booking Summary -->
+
+        <div class="premium-booking-summary">
+
+            <h2>Booking Summary</h2>
+
+            <div class="summary-line">
+                <span>Selected Seats</span>
+                <strong id="selectedSeats">None</strong>
+            </div>
+
+            <div class="summary-line total-line">
+                <span>Total Amount</span>
+                <strong id="totalAmount">₹0</strong>
+            </div>
+
+            <input type="hidden"
+                   name="selected_seats"
+                   id="selectedSeatsInput">
+
+
+            <!-- Customer Details -->
+
+            <div class="customer-details">
+
+                <h3>Your Details</h3>
+
+                <input type="text"
+                       name="customer_name"
+                       placeholder="Enter your full name"
+                       maxlength="150"
+                       required>
+
+                <input type="email"
+                       name="customer_email"
+                       placeholder="Enter your email address"
+                       required>
+
+            </div>
+
+
+            <button type="submit"
+                    class="book-btn confirm-booking-btn"
+                    id="continueBtn"
+                    disabled>
+
+                Confirm Booking →
+
+            </button>
+
+            <p class="booking-note">
+                Please check your selected seats before confirming.
+            </p>
+
+        </div>
+
+    </form>
+
+</section>
+
+
+{{ booked_seats|json_script:"booked-seats-data" }}
+
+
+<script>
+
+    const seatLayout = document.getElementById("seatLayout");
+
+    const selectedSeatsText =
+        document.getElementById("selectedSeats");
+
+    const totalAmountText =
+        document.getElementById("totalAmount");
+
+    const selectedSeatsInput =
+        document.getElementById("selectedSeatsInput");
+
+    const continueBtn =
+        document.getElementById("continueBtn");
+
+
+    const ticketPrice = Number("{{ show.ticket_price }}");
+
+    const bookedSeats = JSON.parse(
+        document.getElementById("booked-seats-data").textContent
+    );
+
+
+    let selectedSeats = [];
+
+    const rows = ["A", "B", "C", "D", "E"];
+
+
+    rows.forEach((row) => {
+
+        const rowDiv = document.createElement("div");
+
+        rowDiv.className = "seat-row";
+
+
+        // Row label
+
+        const rowLabel = document.createElement("span");
+
+        rowLabel.className = "row-label";
+
+        rowLabel.textContent = row;
+
+        rowDiv.appendChild(rowLabel);
+
+
+        for (let number = 1; number <= 10; number++) {
+
+            const seatNumber = row + number;
+
+            const seat = document.createElement("button");
+
+            seat.className = "seat";
+
+            seat.textContent = number;
+
+            seat.type = "button";
+
+            seat.setAttribute(
+                "aria-label",
+                "Seat " + seatNumber
+            );
+
+
+            if (bookedSeats.includes(seatNumber)) {
+
+                seat.disabled = true;
+
+                seat.classList.add("unavailable");
+
+                seat.title = "Already booked";
+
+            }
+
+
+            seat.addEventListener("click", function () {
+
+                if (seat.disabled) {
+                    return;
+                }
+
+
+                if (selectedSeats.includes(seatNumber)) {
+
+                    selectedSeats = selectedSeats.filter(
+                        item => item !== seatNumber
+                    );
+
+                    seat.classList.remove("selected");
+
+                } else {
+
+                    selectedSeats.push(seatNumber);
+
+                    seat.classList.add("selected");
+
+                }
+
+
+                updateSummary();
+
+            });
+
+
+            // Add aisle gap after fifth seat
+
+            if (number === 6) {
+
+                seat.classList.add("aisle-gap");
+
+            }
+
+
+            rowDiv.appendChild(seat);
+
+        }
+
+
+        seatLayout.appendChild(rowDiv);
+
+    });
+
+
+    function updateSummary() {
+
+        selectedSeatsText.textContent =
+            selectedSeats.length
+                ? selectedSeats.join(", ")
+                : "None";
+
+
+        totalAmountText.textContent =
+            "₹" + (selectedSeats.length * ticketPrice);
+
+
+        selectedSeatsInput.value =
+            selectedSeats.join(",");
+
+
+        continueBtn.disabled =
+            selectedSeats.length === 0;
+
+    }
+
+</script>
+
+</body>
+</html>

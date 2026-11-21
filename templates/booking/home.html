@@ -1,0 +1,232 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CineBook | Book Movie Tickets</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+
+        <div class="logo">Cine<span>Book</span></div>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="#movies">Movies</a>
+            <a href="#about">About</a>
+        </div>
+
+        <!-- Authentication Navigation -->
+        <div class="nav-auth">
+
+            {% if user.is_authenticated %}
+
+                <span class="welcome-user">
+                    Welcome, {{ user.username }}
+                </span>
+
+                <a href="{% url 'my_bookings' %}" class="login-btn">
+                    My Bookings ({{ user_booking_count }})
+                </a>
+
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+
+                    <button type="submit" class="login-btn">
+                        Logout
+                    </button>
+                </form>
+
+            {% else %}
+
+                <a href="{% url 'login' %}" class="login-btn">
+                    Login
+                </a>
+
+                <a href="{% url 'register' %}" class="login-btn">
+                    Register
+                </a>
+
+            {% endif %}
+
+            <a href="/admin/" class="login-btn">Admin</a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <p class="tagline">YOUR CINEMA EXPERIENCE STARTS HERE</p>
+
+            <h1>
+                Every story<br>
+                deserves the <span>big screen.</span>
+            </h1>
+
+            <p class="hero-description">
+                Discover amazing movies, explore your favourite stories
+                and book your perfect seats with CineBook.
+            </p>
+
+            <a href="#movies" class="book-btn">
+                Explore Movies →
+            </a>
+
+        </div>
+
+        <div class="hero-decoration">
+            <div class="hero-circle"></div>
+            <div class="hero-text">EXPERIENCE THE MAGIC OF CINEMA</div>
+        </div>
+
+    </section>
+
+
+    <!-- Movies Section -->
+    <section class="movies-section" id="movies">
+
+        <div class="section-heading">
+
+            <div>
+                <p class="tagline">DISCOVER YOUR NEXT MOVIE</p>
+                <h2>Now Showing</h2>
+            </div>
+
+            <p class="view-all">
+                {{ movies|length }} Movies Available
+            </p>
+
+        </div>
+
+
+        <!-- Movie Search -->
+        <form method="GET" action="{% url 'home' %}" class="movie-search">
+
+            <input
+                type="text"
+                name="q"
+                placeholder="Search your favourite movie..."
+                value="{{ search_query }}"
+            >
+
+            <button type="submit">Search</button>
+
+            {% if search_query %}
+                <a href="{% url 'home' %}">Clear</a>
+            {% endif %}
+
+        </form>
+
+
+        <!-- Movie Cards -->
+        <div class="movie-grid">
+
+            {% for movie in movies %}
+
+                <div class="movie-card">
+
+                    <a href="{% url 'movie_detail' movie.id %}"
+                       class="movie-poster-link">
+
+                        {% if movie.poster %}
+
+                            <img
+                                src="{{ movie.poster.url }}"
+                                alt="{{ movie.title }}"
+                                class="movie-poster"
+                            >
+
+                        {% else %}
+
+                            <div class="poster">
+                                <span>{{ movie.title|slice:":1" }}</span>
+                            </div>
+
+                        {% endif %}
+
+                    </a>
+
+
+                    <div class="movie-card-content">
+
+                        <h3>
+                            <a href="{% url 'movie_detail' movie.id %}">
+                                {{ movie.title }}
+                            </a>
+                        </h3>
+
+                        <p class="movie-genre">
+                            {{ movie.genre }} • {{ movie.language }}
+                        </p>
+
+                        <p class="movie-duration">
+                            <span>◷</span> {{ movie.duration }} minutes
+                        </p>
+
+                        <a
+                            href="{% url 'movie_detail' movie.id %}"
+                            class="movie-btn"
+                        >
+                            Book Tickets →
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="empty-movies">
+                    <h3>No movies available right now.</h3>
+                    <p>Please check back later for upcoming movies.</p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+
+        <p class="tagline">ABOUT CINEBOOK</p>
+
+        <h2>Your movie. Your seat. Your experience.</h2>
+
+        <p>
+            CineBook makes movie ticket booking simple.
+            Explore movies, choose your favourite seats
+            and enjoy your cinema experience.
+        </p>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <h2>Cine<span>Book</span></h2>
+
+        <p>Your movie. Your seat. Your experience.</p>
+
+        <p>© 2026 CineBook. All rights reserved.</p>
+
+    </footer>
+
+</body>
+</html>

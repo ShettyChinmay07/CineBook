@@ -1,0 +1,20 @@
+
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Secret configuration
+.env
+.env.*
+!.env.example
+
+# Local database
+db.sqlite3
+*.sqlite3
+
+# Generated files
+staticfiles/
+*.log
+.DS_Store
+Thumbs.db
